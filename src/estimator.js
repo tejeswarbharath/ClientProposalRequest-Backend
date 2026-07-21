@@ -12,10 +12,10 @@ function weeks(points, developmentPeople, qaPeople, performancePeople) {
   return Math.max(1, Math.ceil(points / weeklyCapacity));
 }
 
-export function generateEstimate({ proposalRequest = '', plannedTeamSize = 10 }) {
+export function generateEstimate({ proposalRequest = '', plannedTeamSize, teamSize } = {}) {
   const request = proposalRequest.toLowerCase();
   const qaOnly = /only qa|testing only|qa effort only/.test(request);
-  const teamSize = Math.max(1, Number(plannedTeamSize) || 10);
+  const normalizedTeamSize = Math.max(1, Number(plannedTeamSize ?? teamSize) || 10);
   if (qaOnly) {
     const modules = [
       ['Test strategy & planning', 'QA only', 8, 0, 1, 0],
@@ -31,9 +31,9 @@ export function generateEstimate({ proposalRequest = '', plannedTeamSize = 10 })
   const roles = {
     'Solution Architect': 1,
     'Cloud Architect': 1,
-    'Backend Developer': Math.max(2, Math.round(teamSize * 0.34)),
-    'Frontend Developer': Math.max(1, Math.round(teamSize * 0.17)),
-    'Quality Assurance': Math.max(1, Math.round(teamSize * 0.17)),
+    'Backend Developer': Math.max(2, Math.round(normalizedTeamSize * 0.34)),
+    'Frontend Developer': Math.max(1, Math.round(normalizedTeamSize * 0.17)),
+    'Quality Assurance': Math.max(1, Math.round(normalizedTeamSize * 0.17)),
     'Performance Tester': 1,
     'DevOps Engineer': 1
   };
